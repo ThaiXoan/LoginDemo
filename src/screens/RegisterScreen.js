@@ -29,7 +29,14 @@ export default class RegisterScreen extends Component<{}> {
       showPass: true,
       pressPass: false,
       showConfirmPass: true,
-      pressConfirmPass: false
+      pressConfirmPass: false,
+
+      fullName: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      isActive:  false
     }
   };
 
@@ -53,17 +60,39 @@ export default class RegisterScreen extends Component<{}> {
     this.props.navigation.navigate('Login')
   };
   registerFunction = () => {
-    if (true) {
+
+    var error = "";
+    var reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+    if (this.state.fullName.trim() == "" || this.state.username.trim() == "" || this.state.email.trim() == "" || this.state.password.trim() == "" || this.state.confirmPassword.trim() == "") {
+      error = "Please complete all required fields"
+    } else if (this.state.password.trim() != this.state.confirmPassword.trim()) {
+      error = "Please enter the password field match with the confirm password field."
+    }else if (this.state.password.length < 8) {
+      error = "The password field must be more than 8 character"
+    }else if (reg.test(this.state.email) === false) {
+      error = "Invalid email address. Please enter a valid email address"
+    }else {
+      error = ""
+    }
+
+    if (error == "") {
       Alert.alert(
       "Note",
-      "Register success! Please check email to active account. thank you!",
+      "Register success! Please check email to activated account. thank you!",
       [
         {text: 'OK', onPress: () => this.props.navigation.navigate('Login')},
       ],
         { cancelable: false }
       )
     } else {
-
+      Alert.alert(
+      "Note",
+      error,
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+        { cancelable: false }
+      )
     }
   }
 
@@ -79,7 +108,7 @@ export default class RegisterScreen extends Component<{}> {
                 style={{width: 110, height: 110}}
                 source={require('../images/register-logo.png')}
               />
-              <Text style={styles.logoText}>Account Register</Text>
+              <Text style={styles.logoText}>Register an Account</Text>
             </View>
 
             <View style={styles.inputContainer}>
@@ -88,6 +117,8 @@ export default class RegisterScreen extends Component<{}> {
                   placeholder="Full name"
                   underlineColorAndroid='rgba(0,0,0,0)'
                   placeholderTextColor="#ffffff"
+                  onChangeText={(fullName) => this.setState({fullName})}
+                  value={this.state.fullName}
               />
             </View>
 
@@ -97,6 +128,8 @@ export default class RegisterScreen extends Component<{}> {
                   placeholder="Username"
                   underlineColorAndroid='rgba(0,0,0,0)'
                   placeholderTextColor="#ffffff"
+                  onChangeText={(username) => this.setState({username})}
+                  value={this.state.username}
               />
             </View>
 
@@ -107,6 +140,8 @@ export default class RegisterScreen extends Component<{}> {
                   keyboardType="email-address"
                   underlineColorAndroid='rgba(0,0,0,0)'
                   placeholderTextColor="#ffffff"
+                  onChangeText={(email) => this.setState({email})}
+                  value={this.state.email}
               />
             </View>
 
@@ -117,6 +152,8 @@ export default class RegisterScreen extends Component<{}> {
                   secureTextEntry={this.state.showPass}
                   underlineColorAndroid='rgba(0,0,0,0)'
                   placeholderTextColor="#ffffff"
+                  onChangeText={(password) => this.setState({password})}
+                  value={this.state.password}
               />
 
               <TouchableOpacity onPress={this.showPass.bind(this)}>
@@ -128,10 +165,12 @@ export default class RegisterScreen extends Component<{}> {
             <View style={styles.inputContainer}>
               <Image style={styles.inputIcon} source={ConfirmPassImage}/>
               <TextInput style={styles.inputBox}
-                  placeholder="Confirm Password"
+                  placeholder="Confirm the Password"
                   secureTextEntry={this.state.showConfirmPass}
                   underlineColorAndroid='rgba(0,0,0,0)'
                   placeholderTextColor="#ffffff"
+                  onChangeText={(confirmPassword) => this.setState({confirmPassword})}
+                  value={this.state.confirmPassword}
               />
 
               <TouchableOpacity onPress={this.showConfirmPass.bind(this)}>

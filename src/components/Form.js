@@ -23,7 +23,8 @@ class Form extends Component<{}>{
       showPass: true,
       press: false,
       email: "",
-      password: ""
+      password: "",
+      isActive: false
     }
   };
 
@@ -37,12 +38,14 @@ class Form extends Component<{}>{
   };
 
   loginFunction = () =>{
-    if (this.state.email == "abc" && this.state.password == "123") {
+    if (this.state.email == "abc" && this.state.password == "123" && this.state.isActive == true) {
       this.props.navigation.navigate('Home')
     } else {
       var error = "";
       if(this.state.email == "" || this.state.password == ""){
         error = "Email or Password is not empty !"
+      } else if (this.state.isActive == false) {
+          error = "Your account is not activated, please check email to activated account !"
       } else {
         error = "Email or password incorrect !"
       }
@@ -54,10 +57,8 @@ class Form extends Component<{}>{
         {text: 'OK', onPress: () => console.log('OK Pressed')},
       ],
         { cancelable: false }
-      )
-      
-    }
-    
+      ) 
+    }   
   };
 
 
@@ -91,6 +92,7 @@ class Form extends Component<{}>{
           <TouchableOpacity onPress={this.showPass.bind(this)}>
             <Image style={styles.inputIconShow} source={this.state.press == false ? ShowPassImage : HidePassImage}/>
           </TouchableOpacity>
+
         </View>
 
         <TouchableOpacity style={styles.button} onPress={this.loginFunction}>
